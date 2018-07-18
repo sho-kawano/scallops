@@ -1,2 +1,2 @@
 # scallops
-Lemos and Sanso' (2008) model.
+Lemos and Sanso' (2012) model.
