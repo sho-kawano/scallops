@@ -36,6 +36,8 @@ ggmap(map.ny) +
   geom_point(data = dpc_grid$coord, aes(x = lon, y = lat), shape = 3, color = 'red')
 ```
 
+![](figs/domain.png)
+
 We will be placing one Gaussian variable over each gridpoint. 
 To have an idea of its influence on the interpolation, let us pick one in the
 middle of the plot, (39.5N, -73E), and depict how its weight changes across space.
@@ -56,7 +58,7 @@ posterior weight for the same Gaussian variable.
 ```R
 fit = get_mcmc(s = data.frame(lon = scallop$longitude, lat = scallop$latitude), 
                dpc_grid = dpc_grid, y = scallop$log10catch)
-plot_influence(get_gridpoint_influence(dpc_grid, lat = 39.5, lon = -73, fit = fit))
+get_influence_plot(get_gridpoint_influence(dpc_grid, lat = 39.5, lon = -73, fit = fit))
 ```
 
 ![](figs/anisotropic.png)
