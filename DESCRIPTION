@@ -1,0 +1,17 @@
+Package: Scallops
+Type: Package
+Title: Lemos and Sanso' (2012) model, edited for speed
+Version: 0.1.0
+Author: Ricardo Lemos
+Maintainer: The package maintainer <rtl00@yahoo.com>
+Description: This is an R implementation of the model described in Lemos and Sanso' (2012), Statistical Methodology 9 (1-2)
+Encoding: UTF-8
+LazyData: true
+Depends:
+  Matrix,
+  tripack
+Suggests: 
+  ggmaps,
+  SemiPar
+VignetteBuilder: knitr
+RoxygenNote: 6.0.1
