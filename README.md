@@ -76,3 +76,4 @@ get_interpolation_plot(obs_coord = scallop, dpc_grid = dpc_grid, fit = fit, cont
 ```
 
 ![](figs/interpolation.png)
+
