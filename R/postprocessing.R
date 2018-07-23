@@ -20,8 +20,9 @@ get_ellipses = function(dpc_grid, fit, eval) {
   ell = mapply(1:ngridpoints, FUN = function(j) {
     center = dpc_grid$coord[j, ]
     rho = fit$rho[[j]]
-    Sigma = get_Sigma(phi_i = rho, grid_spacing = dpc_grid$spacing)
-    aux = cos(angles)**2 * Sigma[1,1] + 2 * sin(angles) * cos(angles) * Sigma[1,2] + sin(angles)**2 * Sigma[2,2]
+    SigmaInv = get_Sigma_inverse(phi_i = rho, grid_spacing = dpc_grid$spacing)
+    aux = cos(angles)**2 * SigmaInv[1,1] + 2 * sin(angles) * cos(angles) * SigmaInv[1,2] + 
+      sin(angles)**2 * SigmaInv[2,2]
     pow = 1 + 4 * rho[1]
     r = (1 - eval^(1/pow)) / sqrt(aux)
     cbind(center$lon + r * cos(angles), center$lat + r * sin(angles))
