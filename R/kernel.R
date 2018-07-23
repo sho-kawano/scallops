@@ -97,6 +97,18 @@ get_kernel_vector = function(s_i, neighbors_i, dpc_grid, phi_i) {
   return(list(normalized_evals = evals / sum_ev, eval_sum = sum_ev))
 }
 
+#' Identify the gridpoints in the neighborhood of location s_i
+#'
+#' @param s_i Observation location
+#' @param dpc_grid Discrete Process Convolution grid
+#'
+#' @return Vector of indices that identify the grispoint neighbors of s_i
+#' @export
+#'
+#' @examples
+#' s_i = list(lat = 0, lon = 0)
+#' dpc_grid = get_grid(c(0, 5), c(0, 5), 1)
+#' get_neighbors_i(s_i, dpc_grid)
 get_neighbors_i = function(s_i, dpc_grid) {
   nlon = length(dpc_grid$lon)
   nlat = length(dpc_grid$lat)
@@ -108,6 +120,17 @@ get_neighbors_i = function(s_i, dpc_grid) {
   indices
 }
 
+#' Identify the observation locations that are in the neighborhood of each gridpoint
+#'
+#' @param neighborsI List of gridpoint neighbors to each observation 
+#' @param ngridpoints Number of gridpoints
+#'
+#' @return List of observation locations that are neighbors to each gridpoint
+#' @export
+#'
+#' @examples
+#' neighborsI = list(list(1, 2), list(2, 3))
+#' get_neighbors_of_gridpoints(neighborsI, 3)
 get_neighbors_of_gridpoints = function(neighborsI, ngridpoints) {
   idI = unlist(neighborsI)
   idJ = unlist(lapply(1:length(neighborsI), FUN = function(i) rep(i, length(neighborsI[[i]]))))
@@ -116,6 +139,21 @@ get_neighbors_of_gridpoints = function(neighborsI, ngridpoints) {
   out
 }
 
+#' Construct a sparse kernel matrix
+#'
+#' @param s Observation locations
+#' @param dpc_grid Discrete Process Convolution grid
+#' @param phi Optional kernel parameters
+#'
+#' @return List with sparse matrix (nrow = number of observations, ncol = number of gridpoints), plus
+#'         metadata
+#' @export
+#'
+#' @examples
+#' s = data.frame(lon = 1:3, lat = 1:3)
+#' dpc_grid = get_grid(c(1, 3), c(1, 3), 1)
+#' get_kernel_matrix(s, dpc_grid)$mat
+#' 
 get_kernel_matrix = function(s, dpc_grid, phi = NULL) {
   s = get_mat2list(s)
   neighborsI = lapply(s, FUN = function(s_i) get_neighbors_i(s_i, dpc_grid))
