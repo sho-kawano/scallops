@@ -1,3 +1,23 @@
+#' Optimize kernel parameters
+#'
+#' @param nburn Number of iterations
+#' @param priors Prior distributions for gamma (Gaussian) and tau (Gamma)
+#' @param s Coordinates of observations
+#' @param y Values of observations
+#' @param iso_kernel_matrix Isotropic kernel matrix
+#'
+#' @return List with optimized kernel parameters, as well as corresponding mean values of gamma and tau
+#' @export 
+#'
+#' @examples
+#' s = expand.grid(lat = c(-1:1), lon = c(-1:1))
+#' y = c(1,0,0,0,1,0,0,0,1)
+#' dpc_grid = get_grid(c(-1,1), c(-1,1), spacing = 2)
+#' priors = get_priors(dpc_grid)
+#' iso_kernel_matrix = get_kernel_matrix(s, dpc_grid)
+#' fit = get_em(10, priors, s, y, iso_kernel_matrix)
+#' cbind(get_estimates(s, dpc_grid, fit), obs = y)
+#' 
 get_em = function(nburn, priors, s, y, iso_kernel_matrix) {
   s = get_mat2list(s)
   neighborsI = iso_kernel_matrix$neighborsI
@@ -30,7 +50,28 @@ get_em = function(nburn, priors, s, y, iso_kernel_matrix) {
   list(gamma = gamma, tau = tau, rho = rho)
 }
 
-
+#' Markov chain Monte Carlo (Gibbs) method to sample from the conditional distributions of gamma and tau
+#'
+#' @param s Observation locations
+#' @param dpc_grid Discrete Process Convolution grid
+#' @param y Observation values
+#' @param nburn Number of EM iterations (burn-in) use dto estimate kernel parameters (rho)
+#' @param nsample Number of MCMC iterations
+#' @param priors Priors for gamma and tau
+#' @param printEvery Console notifications every X iterations 
+#' @param seed Seed for reproducible chains
+#'
+#' @return List with sampled values of gamma and tau, as well as optimal estimates for rho
+#' @export
+#'
+#' @examples
+#' s = data.frame(lat = rep(0, 3), lon = c(-1:1))
+#' y = c(1,1,0)
+#' dpc_grid = get_grid(c(-1,1), c(0,0), spacing = 2)
+#' priors = get_priors(dpc_grid)
+#' iso_kernel_matrix = get_kernel_matrix(s, dpc_grid)
+#' fit = get_mcmc(s, dpc_grid, y, 10, 1000, priors, 100, 1)
+#' cbind(get_estimates(s, dpc_grid, fit), obs = y)
 get_mcmc = function(s, dpc_grid, y, nburn = 10, nsample = 10000, priors = NULL, printEvery = 1000, seed = NULL) {
   if (!is.null(seed))
     set.seed(seed)
@@ -61,6 +102,6 @@ get_mcmc = function(s, dpc_grid, y, nburn = 10, nsample = 10000, priors = NULL, 
       sample_gamma[[i]] = gamma
       sample_tau[[i]] = tau
     }
-    list(tau = sample_tau, gamma = sample_gamma, rho = em$rho)
+    list(gamma = sample_gamma, tau = sample_tau, rho = em$rho)
   }
 }

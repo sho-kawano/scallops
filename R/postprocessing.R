@@ -34,16 +34,17 @@ get_ellipses = function(dpc_grid, fit, eval) {
 }
 
 get_estimates = function(s, dpc_grid, fit) {
+  slist = get_mat2list(s)
   gamma_mat = if (class(fit$gamma) == 'dgeMatrix')
     as.matrix(fit$gamma)
   else
     matrix(nrow = length(fit$gamma[[1]]), unlist(fit$gamma))
   gamma_mean = apply(gamma_mat, MARGIN = 1, FUN = mean)
-  iso_kernel_matrix = get_kernel_matrix(s = s, dpc_grid = dpc_grid)
+  iso_kernel_matrix = get_kernel_matrix(s = slist, dpc_grid = dpc_grid)
   rho_mat = matrix(nrow = 4, unlist(fit$rho))
   phi_mat = Matrix::tcrossprod(iso_kernel_matrix$mat, rho_mat)
   phi = lapply(1:nrow(phi_mat), FUN = function(i) phi_mat[i, ])
-  km = get_kernel_matrix(s = s, dpc_grid = dpc_grid, phi = phi)
+  km = get_kernel_matrix(s = slist, dpc_grid = dpc_grid, phi = phi)
   estimates = as.numeric(km$mat %*% gamma_mean)
   df = cbind(s, z = estimates)
   df
