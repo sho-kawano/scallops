@@ -40,10 +40,11 @@ ggmap(map.ny) +
 
 We will be placing one Gaussian variable over each gridpoint. 
 To have an idea of its influence on the interpolation, let us pick one in the
-middle of the plot, (39.5N, -73E), and depict how its weight changes across space.
+middle of the plot, (39.5N, -72.75E), and depict how its weight changes across space.
 
 ```R
-get_influence_plot(dpc_grid, lat = 39.5, lon = -72.75)
+get_influence_plot(dpc_grid, lat = 39.5, lon = -72.75) +
+    geom_point(data = scallop, aes(x = longitude, y = latitude, size = logcatch), shape = 1)
 ```
 
 ![](figs/isotropic.png)
@@ -56,9 +57,14 @@ Let us now fit the model and depict the spatial variation of the
 posterior weight for the same Gaussian variable.
 
 ```R
-fit = get_mcmc(s = data.frame(lon = scallop$longitude, lat = scallop$latitude), 
-               dpc_grid = dpc_grid, y = scallop$log10catch)
-get_influence_plot(get_gridpoint_influence(dpc_grid, lat = 39.5, lon = -73, fit = fit))
+fit = get_mcmc(nburn = 10, nsample = 1000,
+               s = data.frame(lon = scallop$longitude, lat = scallop$latitude), 
+               dpc_grid = dpc_grid, y = scallop$logcatch, 
+               priors = get_priors(dpc_grid = dpc_grid, precision_diagonal_value = 0.01),
+               seed = 1)
+get_influence_plot(dpc_grid, lat = 39.5, lon = -72.75, fit = fit) +
+    geom_point(data = scallop, aes(x = longitude, y = latitude, size = logcatch), shape = 1)
+
 ```
 
 ![](figs/anisotropic.png)
@@ -73,8 +79,8 @@ get_ellipses_plot(dpc_grid, fit)
 And finally, let us look at the interpolation.
 
 ```R
-get_interpolation_plot(obs_coord = scallop, dpc_grid = dpc_grid, fit = fit, contour_binwidth = 1,
-                       obs_as_labels = TRUE)
+get_interpolation_plot(obs_coord = scallop, dpc_grid = dpc_grid, fit = fit, contour_binwidth = 1) +
+                       geom_text(data = scallop, aes(x = longitude, y = latitude, label = round(logcatch)))
 ```
 
 ![](figs/interpolation.png)

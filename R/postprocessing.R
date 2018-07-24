@@ -150,11 +150,12 @@ get_gridded_estimates = function(obs_coord, dpc_grid, fit, fineness) {
 #' get_influence_plot(get_grid(c(-1,1), c(-1,1), spacing = 2), -1, -1, fit = NULL)
 get_influence_plot = function(dpc_grid, lat, lon, fit = NULL) {
   df = get_gridpoint_influence(dpc_grid, lat, lon, fit)
-  ggplot() + geom_raster(data = df[df$z > 0,], aes(x = lon, y = lat, fill = z))  +
+  p = ggplot() + geom_raster(data = df[df$z > 0,], aes(x = lon, y = lat, fill = z))  +
     geom_point(data = dpc_grid$coord, aes(x = lon, y = lat), shape = 3, color = 'red') +
     coord_fixed(ratio = 1) +
     scale_fill_gradient(low = "light gray", high = "dark blue", space = "Lab",
                         na.value = "grey50", guide = "colourbar", aesthetics = "fill")
+  return(p)
 }
 
 #' Plot kernel ellipses centered at the DPC gridpoints
@@ -177,9 +178,10 @@ get_influence_plot = function(dpc_grid, lat, lon, fit = NULL) {
 #' get_ellipses_plot(dpc_grid, fit)
 get_ellipses_plot = function(dpc_grid, fit, eval = 0.7) {
   el = get_ellipses(dpc_grid, fit, eval)
-  ggplot() + geom_path(data = el, aes(x = lon, y = lat, group = gp), color = 'red') +
+  p = ggplot() + geom_path(data = el, aes(x = lon, y = lat, group = gp), color = 'red') +
     geom_point(data = dpc_grid$coord, aes(x = lon, y = lat), shape = 3, color = 'red') +
     coord_fixed(ratio = 1)
+  return(p)
 }
 
 #' Plot the interpolated surface
@@ -214,10 +216,11 @@ get_interpolation_plot = function(obs_coord, dpc_grid, fit, fineness = 16,
     geom_point(data = dpc_grid$coord, aes(x = lon, y = lat), shape = 3, color = 'red')
   else
     NULL
-  ggplot(data = df, mapping = aes(x = lon, y = lat)) + 
+  p = ggplot(data = df, mapping = aes(x = lon, y = lat)) + 
     geom_raster(data = df, mapping = aes(x = lon, y = lat, fill = z)) + 
     scale_fill_gradient2(low = "black", mid = 'light blue', high = "white", space = "Lab", 
                          midpoint = mean(df$z), na.value = "black", 
                          guide = "colourbar", aesthetics = "fill") +
     ctr + grd + coord_fixed(ratio = 1)
+  return(p)
 }
