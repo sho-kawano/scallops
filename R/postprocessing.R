@@ -21,7 +21,6 @@ get_gridpoint_influence = function(dpc_grid, lat, lon, fit = NULL) {
 #' @param eval Size of ellipses: k[s_i, s_j, \phi] = eval
 #'
 #' @return Dataframe with coordinates of points that are points in the ellipses; gp identifies the gridpoint
-#' @export
 #'
 #' @examples
 get_ellipses = function(dpc_grid, fit, eval) {

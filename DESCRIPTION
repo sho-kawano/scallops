@@ -10,8 +10,10 @@ LazyData: true
 Depends:
   Matrix,
   tripack
-Suggests: 
+Suggests:
   ggmaps,
-  SemiPar
+  SemiPar,
+    knitr,
+    rmarkdown
 VignetteBuilder: knitr
 RoxygenNote: 6.0.1
