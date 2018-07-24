@@ -12,8 +12,6 @@ Depends:
   tripack
 Suggests:
   ggmaps,
-  SemiPar,
-    knitr,
-    rmarkdown
+  SemiPar
 VignetteBuilder: knitr
 RoxygenNote: 6.0.1
