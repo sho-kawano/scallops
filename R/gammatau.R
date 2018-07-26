@@ -154,11 +154,12 @@ get_gamma_sample = function(prior_mean, prior_precision, kernel_matrix, tau, y, 
   posterior_precision = get_posterior_precision(prior_precision, kernel_matrix, tau)
   posterior_mean = get_posterior_mean(prior_mean, prior_precision, posterior_precision, kernel_matrix, tau, y)
   n = nrow(posterior_precision)
-  R = Matrix::chol(posterior_precision)
   if (return_mean)
     as.numeric(posterior_mean)
-  else
+  else {
+    R = Matrix::chol(posterior_precision)
     as.numeric(solve(R, rnorm(n)) + posterior_mean)
+  }
 }
 
 #' Sample tau from its full conditional distribution
