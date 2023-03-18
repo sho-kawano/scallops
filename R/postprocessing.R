@@ -1,6 +1,6 @@
 get_gridpoint_influence = function(dpc_grid, lat, lon, fit = NULL) {
   idx = which(dpc_grid$coord$lat == lat & dpc_grid$coord$lon == lon)
-  if (length(idx) != 1) {
+  if (length(idx) < 1) {
     cat('Could not find gridpoint.\n')
     return()
   }
