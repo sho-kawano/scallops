@@ -18,7 +18,7 @@
 #' fit = get_em(10, priors, s, y, iso_kernel_matrix)
 #' cbind(get_estimates(s, dpc_grid, fit), obs = y)
 #' 
-get_em = function(nburn, priors, s, y, iso_kernel_matrix) {
+get_em = function(nburn, priors, s, y, iso_kernel_matrix, dpc_grid) {
   s = get_mat2list(s)
   neighborsI = iso_kernel_matrix$neighborsI
   neighborsJ = iso_kernel_matrix$neighborsJ
@@ -80,7 +80,7 @@ get_mcmc = function(s, dpc_grid, y, nburn = 10, nsample = 10000, priors = NULL, 
   if (is.null(priors)) 
     priors = get_priors(dpc_grid)
   em = if (nburn > 0)
-    get_em(nburn, priors, s, y, iso_kernel_matrix)
+    get_em(nburn, priors, s, y, iso_kernel_matrix, dpc_grid)
   else
     list(gamma = priors$gamma$mean, 
          tau = priors$tau$b / priors$tau$a, 
